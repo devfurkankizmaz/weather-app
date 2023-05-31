@@ -3,7 +3,9 @@ dev:
 
 dev-down:
 	docker-compose down
+	
 run:
 	go run main.go
 
-.PHONY: dev dev-down run
+mock:
+	mockery --name=WeatherService --filename=weather_mock.go --inpackage
