@@ -11,3 +11,9 @@ type StoreData struct {
 	TempF       float32 `json:"temp_f"`
 	LastUpdated string  `json:"last_updated"`
 }
+
+type Api struct {
+	Url    string
+	City   string
+	ApiKey string
+}
