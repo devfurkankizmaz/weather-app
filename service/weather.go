@@ -56,8 +56,17 @@ func (s *weatherService) CreateWeather(ctx context.Context, url *types.Api) (*ty
 		LastUpdated: weather.Current.LastUpdated,
 	}
 	if store.Name == "" {
-		return nil, fmt.Errorf("wrong query format")
+		return nil, fmt.Errorf("wrong query city name")
 	}
+	lowerName := strings.ToLower(store.Name)
+	lowerCity := strings.ToLower(url.City)
+
+	newCity := strings.Replace(lowerCity, "%", " ", -1)
+
+	if lowerName != newCity {
+		return nil, fmt.Errorf("wrong query city name")
+	}
+
 	key := fmt.Sprintf("weather:%s", strings.ToLower(url.City))
 	w, err := json.Marshal(store)
 	if err != nil {
