@@ -69,7 +69,7 @@ A simple Weather App built with Go that utilizes an external API to fetch curren
 ## Usage
 
 - Open your web browser and navigate to `localhost:7070/weather`.
-- Append the `city` query parameter to the URL, for example: `localhost:7070/weather?city=Istanbul`
+- Append the `city` query parameter to the URL, for example: `localhost:7070/weather?city=Istanbul` or `localhost:7070/weather?city=New%York`
 - The application will fetch the current weather data for the specified city and display it
 
 ## Contributing
