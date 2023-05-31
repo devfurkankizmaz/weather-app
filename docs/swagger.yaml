@@ -1,0 +1,70 @@
+basePath: /
+definitions:
+  types.StoreData:
+    properties:
+      country:
+        type: string
+      last_updated:
+        type: string
+      latitude:
+        type: number
+      localtime:
+        type: string
+      longitude:
+        type: number
+      name:
+        type: string
+      region:
+        type: string
+      temp_c:
+        type: number
+      temp_f:
+        type: number
+    type: object
+  utils.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+host: localhost:7070
+info:
+  contact: {}
+  description: This service is a weather web server that utilizes an external API.
+  title: Weather App
+  version: "1.0"
+paths:
+  /weather:
+    get:
+      consumes:
+      - application/json
+      description: Get weather infos by given city name in query
+      parameters:
+      - description: Weather search by city name
+        format: city
+        in: query
+        name: city
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.StoreData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Show weather info
+      tags:
+      - weather
+swagger: "2.0"

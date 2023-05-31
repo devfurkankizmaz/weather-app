@@ -1,0 +1,105 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This service is a weather web server that utilizes an external API.",
+        "title": "Weather App",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:7070",
+    "basePath": "/",
+    "paths": {
+        "/weather": {
+            "get": {
+                "description": "Get weather infos by given city name in query",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "weather"
+                ],
+                "summary": "Show weather info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "city",
+                        "description": "Weather search by city name",
+                        "name": "city",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.StoreData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "types.StoreData": {
+            "type": "object",
+            "properties": {
+                "country": {
+                    "type": "string"
+                },
+                "last_updated": {
+                    "type": "string"
+                },
+                "latitude": {
+                    "type": "number"
+                },
+                "localtime": {
+                    "type": "string"
+                },
+                "longitude": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "region": {
+                    "type": "string"
+                },
+                "temp_c": {
+                    "type": "number"
+                },
+                "temp_f": {
+                    "type": "number"
+                }
+            }
+        },
+        "utils.HTTPError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "message": {
+                    "type": "string",
+                    "example": "status bad request"
+                }
+            }
+        }
+    }
+}

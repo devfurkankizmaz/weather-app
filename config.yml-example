@@ -1,0 +1,8 @@
+SERVER_PORT: :7070
+REDIS_ADDRESS: localhost:6379
+REDIS_PASS:
+REDIS_DB: 0
+REDIS_EXPIRY_MIN: 30
+CONTEXT_TIMEOUT_SEC: 10
+API_KEY: apikey
+API_URL: api.weatherapi.com/v1/current.json
