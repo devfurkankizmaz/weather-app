@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/devfurkankizmaz/weather-app/model"
@@ -57,7 +58,7 @@ func (s *weatherService) CreateWeather(ctx context.Context, url *types.Api) (*ty
 	if store.Name == "" {
 		return nil, fmt.Errorf("wrong query format")
 	}
-	key := fmt.Sprintf("weather:%s", url.City)
+	key := fmt.Sprintf("weather:%s", strings.ToLower(url.City))
 	w, err := json.Marshal(store)
 	if err != nil {
 		return nil, err
@@ -70,7 +71,7 @@ func (s *weatherService) CreateWeather(ctx context.Context, url *types.Api) (*ty
 }
 
 func (s *weatherService) GetWeatherByCity(ctx context.Context, city string) (types.StoreData, error) {
-	key := fmt.Sprintf("weather:%s", city)
+	key := fmt.Sprintf("weather:%s", strings.ToLower(city))
 	var data types.StoreData
 	cachedWeather, err := s.weatherRepository.GetWeatherByCity(ctx, key)
 	if err != nil {
