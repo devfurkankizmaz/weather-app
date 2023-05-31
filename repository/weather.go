@@ -36,11 +36,11 @@ func (r *weatherRepository) CreateWeather(ctx context.Context, key string, weath
 
 func (r *weatherRepository) GetWeatherByCity(ctx context.Context, key string) ([]byte, error) {
 	cachedWeather, err := r.client.Get(ctx, key).Bytes()
+
 	if err == redis.Nil {
 		return nil, nil
 	} else if err != nil {
 		return nil, fmt.Errorf("failed to get weather from cache: %w", err)
 	}
-
 	return cachedWeather, nil
 }

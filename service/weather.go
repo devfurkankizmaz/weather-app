@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/devfurkankizmaz/weather-app/model"
 	"github.com/devfurkankizmaz/weather-app/repository"
 	"github.com/devfurkankizmaz/weather-app/types"
+	"github.com/devfurkankizmaz/weather-app/utils"
 )
 
 type weatherService struct {
@@ -16,7 +18,7 @@ type weatherService struct {
 }
 
 type WeatherService interface {
-	CreateWeather(ctx context.Context, city string, weather *types.StoreData) error
+	CreateWeather(ctx context.Context, url *types.Api) (*types.StoreData, error)
 	GetWeatherByCity(ctx context.Context, city string) (types.StoreData, error)
 }
 
@@ -27,30 +29,56 @@ func NewWeatherService(weatherRepository repository.WeatherRepository, timeout t
 	}
 }
 
-func (s *weatherService) CreateWeather(ctx context.Context, city string, weather *types.StoreData) error {
-	key := fmt.Sprintf("weather:%s", city)
-	w, err := json.Marshal(weather)
+func (s *weatherService) CreateWeather(ctx context.Context, url *types.Api) (*types.StoreData, error) {
+	var weather *model.Weather
+
+	apiUrl := fmt.Sprintf("http://%s?key=%s&q=%s", url.Url, url.ApiKey, url.City)
+
+	body, err := utils.ApiCall(apiUrl)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	err = json.Unmarshal(body, &weather)
+	if err != nil {
+		return nil, err
+	}
+
+	store := &types.StoreData{
+		Name:        weather.Location.Name,
+		Region:      weather.Location.Region,
+		Country:     weather.Location.Country,
+		Latitude:    weather.Location.Lat,
+		Longitude:   weather.Location.Lon,
+		LocalTime:   weather.Location.LocalTime,
+		TempC:       weather.Current.TempC,
+		TempF:       weather.Current.TempF,
+		LastUpdated: weather.Current.LastUpdated,
+	}
+	if store.Name == "" {
+		return nil, fmt.Errorf("wrong query format")
+	}
+	key := fmt.Sprintf("weather:%s", url.City)
+	w, err := json.Marshal(store)
+	if err != nil {
+		return nil, err
 	}
 	err = s.weatherRepository.CreateWeather(ctx, key, w)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return store, nil
 }
 
 func (s *weatherService) GetWeatherByCity(ctx context.Context, city string) (types.StoreData, error) {
 	key := fmt.Sprintf("weather:%s", city)
-	data := types.StoreData{}
+	var data types.StoreData
 	cachedWeather, err := s.weatherRepository.GetWeatherByCity(ctx, key)
 	if err != nil {
-		return data, err
+		return types.StoreData{}, err
 	}
 	err = json.Unmarshal(cachedWeather, &data)
 	if err != nil {
-		return data, err
+		return types.StoreData{}, err
 	}
-
 	return data, nil
 }
