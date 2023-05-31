@@ -4,7 +4,7 @@ A simple Weather App built with Go that utilizes an external API to fetch curren
 
 ## Features
 
-- Retrieves current weather data from the [Weather API](https://www.weatherapi.com/) (api.weatherapi.com/v1/current.json)
+- Retrieves current weather data from the [Weather API](https://www.weatherapi.com/)
 - Supports logging with Logrus [Logrus](https://github.com/sirupsen/logrus)
 - Caching with Redis [go-redis](https://github.com/redis/go-redis)
 - Environment configuration with Viper [Viper](https://github.com/spf13/viper)
